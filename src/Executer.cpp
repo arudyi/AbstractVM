@@ -1,8 +1,9 @@
-#include "Executer.h"
+#include "../headers/Executer.h"
+#include "../headers/operand.h"
+#include "../headers/IOperand.h"
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <deque>
 
 Executer::Executer()
 {
@@ -97,28 +98,33 @@ short Executer::parseInstruction(std::string & buf, std::string *Instruction)
     }
     else
     {
-        size_t pos = buf.find_first_of('(');
-        if (pos == std::string::npos)
+        size_t pos1 = buf.find_first_of('(');
+        if (pos1 == std::string::npos)
             return 2;
-        else
-        {
-            std::string instruction = buf.substr(0, pos);
-            buf = buf.substr(pos + 1);
-            pos = buf.find_first_of(')');
-            if (pos == std::string::npos)
-                return 2;
-            std::string value = buf.substr(0, pos);
-            if (instruction == "int8" || instruction == "int16" || instruction == "int32" || instruction == "float" || instruction == "double")
-            {
-                if (*Instruction == "push")
-                    push(instruction, value);
-                else if (*Instruction == "assert")
-                    assert(instruction, value);
-                return 1;
-            }
-            else
+        std::string instruction = buf.substr(0, pos1);//get instruction
+        buf = buf.substr(pos1 + 1);
+        size_t pos2 = buf.find_first_of(')');
+        if (pos2 == std::string::npos)
+            return 2;
+        std::string value = buf.substr(0, pos2);//get value
+        if (!(buf.substr(pos2 + 1)).empty())
+            return 2;
+
+        for(auto it = value.begin(); it != value.end(); it++)
+        { 
+            if ( *it != '.' && *it != 'f' && *it != '1' && *it != '2' && *it != '3' && *it != '4' && *it != '5' && *it != '6' && *it != '7' && *it != '8' && *it != '9' && *it != '0')
                 return 2;
         }
+        if (instruction == "int8" || instruction == "int16" || instruction == "int32" || instruction == "float" || instruction == "double")
+        {
+            if (*Instruction == "push")
+                push(instruction, value);
+            else if (*Instruction == "assert")
+                assert(instruction, value);
+            return 1;
+        }
+        else
+            return 2;
     }
     return 2;
 }
@@ -126,7 +132,7 @@ short Executer::parseInstruction(std::string & buf, std::string *Instruction)
 void Executer::parsProgramm(std::istream & readStream, bool file_mode)
 {
     std::string buf;
-    std::stringstream os;
+    //std::stringstream os;
     bool isRun = true;
     bool isInstruction = false;
     bool isValue = false;
@@ -135,13 +141,28 @@ void Executer::parsProgramm(std::istream & readStream, bool file_mode)
     while (isRun)
     {
         std::getline(readStream, buf);
-        if (!readStream.good())
+        if (!readStream.good() && file_mode == false)
             throw ExecuterException("bad line");
+        if (file_mode == true)
+        {
+            if (readStream.bad())
+                throw ExecuterException("bad line");
+            if (readStream.eof() && isRun == true && buf.find("exit") == std::string::npos)
+                throw ExecuterException("No instruction exit when EOF");
+        }
         if (buf.find("exit") != std::string::npos)
         {
             if (file_mode == true)
+            {
                 isRun = false;
-            isExit = true;
+                isExit = true;
+                break ;
+            }
+            else
+            {
+                isExit = true;
+                continue ;
+            }
         }
         if (buf.find(";;") != std::string::npos)
         {
@@ -154,9 +175,9 @@ void Executer::parsProgramm(std::istream & readStream, bool file_mode)
         }
         if (!buf.empty())
         {
-            os << buf;
-            std::getline(os, buf, ';');
-            os.str("");
+            size_t pos;
+            if ((pos = buf.find_first_of(';')) != std::string::npos)
+                buf = buf.substr(0, pos);
             std::vector<std::string> array = split(buf, ' ');
             short returnValue;
             for (auto it = array.begin(); it != array.end(); it++)

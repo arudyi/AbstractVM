@@ -2,10 +2,11 @@
 #include <string>
 #include <math.h>
 #include <cfloat>
-#include "Factory.h"
-#include "IOperand.h"
-#include "eOperandType.h"
-#include "operand.h"
+#include "../headers/Factory.h"
+#include "../headers/IOperand.h"
+#include "../headers/eOperandType.h"
+#include "../headers/operand.h"
+#include "../headers/Executer.h"
 
 Factory::Factory()
 {
@@ -57,15 +58,15 @@ IOperand const * Factory::createInt8( std::string const & value ) const
     }
     catch(FactoryException &e)
     {
-        std::cout << e.GetMessage() << std::endl;
+        throw Executer::ExecuterException(e.GetMessage());
     }
     catch(std::out_of_range &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
 }
 
@@ -87,15 +88,15 @@ IOperand const * Factory::createInt16( std::string const & value ) const
     }
     catch(FactoryException &e)
     {
-        std::cout << e.GetMessage() << std::endl;
+        throw Executer::ExecuterException(e.GetMessage());
     }
     catch(std::out_of_range &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
 }
 
@@ -117,15 +118,15 @@ IOperand const * Factory::createInt32( std::string const & value ) const
     }
     catch(FactoryException &e)
     {
-        std::cout << e.GetMessage() << std::endl;
+        throw Executer::ExecuterException(e.GetMessage());
     }
     catch(std::out_of_range &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
 }
 
@@ -144,15 +145,15 @@ IOperand const * Factory::createFloat( std::string const & value ) const
     }
     catch(FactoryException &e)
     {
-        std::cout << e.GetMessage() << std::endl;
+        throw Executer::ExecuterException(e.GetMessage());
     }
     catch(std::out_of_range &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
 }
 
@@ -172,15 +173,15 @@ IOperand const * Factory::createDouble( std::string const & value ) const
     }
     catch(FactoryException &e)
     {
-        std::cout << e.GetMessage() << std::endl;
+        throw Executer::ExecuterException(e.GetMessage());
     }
     catch(std::out_of_range &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
     {
-        std::cout << e.what() << std::endl;
+        throw Executer::ExecuterException(e.what());
     }
 }
 

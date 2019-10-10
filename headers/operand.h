@@ -1,8 +1,10 @@
 #ifndef OPERAND_H
 #define OPERAND_H
 #include <exception>
+#include <sstream>
 #include "eOperandType.h"
 #include "Factory.h"
+#include "Executer.h"
 
 template<typename T>
 class operand : public IOperand
@@ -50,10 +52,12 @@ operand<T>::operand()
 template <typename T>
 operand<T>::operand(T Itsvalue, eOperandType Ittype):
 _Value(Itsvalue),
-_Type(Ittype),
-_StrValue(std::to_string(_Value))
+_Type(Ittype)
 {
-    
+    std::stringstream strStream;
+    strStream << _Value;
+    strStream >> _StrValue;
+
 };
 
 template <typename T>
@@ -71,13 +75,18 @@ eOperandType operand<T>::getType() const
 template <typename T>
 operand<T>::operand(const operand & rhs)
 {
-
+    *this = rhs;
 };
 
 template <typename T>
 operand<T> & operand<T>::operator=(const operand & rhs)
 {
-
+    if (this == &rhs)
+        return *this;
+    _StrValue = rhs._StrValue;
+    _Value = rhs._Value;
+    _Type = rhs._Type;
+    return *this;
 };
 
 template <typename T>
@@ -112,6 +121,7 @@ IOperand const * operand<T>::operator+( IOperand const & rhs ) const
     {
         return factory.createOperand(x, std::to_string( std::stod(this->_StrValue) + std::stod(rhs.toString())));
     }
+    return NULL;
 }
 
 template <typename T>
@@ -133,6 +143,7 @@ IOperand const * operand<T>::operator-( IOperand const & rhs ) const
     {
         return factory.createOperand(x, std::to_string( std::stod(this->_StrValue) - std::stod(rhs.toString())));
     }
+    return NULL;
 } // Difference
 
 template <typename T>
@@ -154,6 +165,7 @@ IOperand const * operand<T>::operator*( IOperand const & rhs ) const
     {
         return factory.createOperand(x, std::to_string( std::stod(this->_StrValue) * std::stod(rhs.toString())));
     }
+    return NULL;
 } // Product
 
 template <typename T>
@@ -190,6 +202,7 @@ IOperand const * operand<T>::operator/( IOperand const & rhs ) const
         else if (x == 4)
             return factory.createOperand(x, std::to_string( std::stod(this->_StrValue) / std::stod(rhs.toString())));
     }
+    return NULL;
 } // Quotient
 
 template <typename T>
@@ -204,23 +217,24 @@ IOperand const * operand<T>::operator%( IOperand const & rhs ) const
         if (x == 0 || x == 1 || x == 2)
             return factory.createOperand(x, std::to_string( std::stoi(this->_StrValue) % std::stoi(rhs.toString())));
         else
-            throw operandException("module is not int");
+            throw Executer::ExecuterException("module is not int");
     }
     else if (x < y)
     {
         if (y == 0 || y == 1 || y == 2)
             return factory.createOperand(y, std::to_string( std::stoi(this->_StrValue) % std::stoi(rhs.toString())));
         else
-            throw operandException("module is not int");
+            throw Executer::ExecuterException("module is not int");
     }
     else if (x > y)
     {
         if (x == 0 || x == 1 || x == 2)
             return factory.createOperand(x, std::to_string( std::stoi(this->_StrValue) % std::stoi(rhs.toString())));
         else
-            throw operandException("module is not int");
+            throw Executer::ExecuterException("module is not int");
     }
-} // Modulo*/
+    return NULL;
+} // Modulo
 
 template <typename T>
 operand<T>::operandException::operandException () noexcept
