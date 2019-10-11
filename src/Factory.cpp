@@ -52,8 +52,7 @@ IOperand const * Factory::createInt8( std::string const & value ) const
             throw FactoryException("Bad value");
         else
         {
-            auto const * myInt8 = new operand<int8_t>(static_cast<int8_t>(tmp), Int8);
-            return (myInt8);
+            return (new operand<int8_t>(static_cast<int8_t>(tmp), Int8));
         } 
     }
     catch(FactoryException &e)
@@ -82,8 +81,7 @@ IOperand const * Factory::createInt16( std::string const & value ) const
             throw FactoryException("Bad value");
         else
         {
-            auto const * myInt16 = new operand<int16_t>(static_cast<int16_t>(tmp), Int16);
-            return (myInt16);
+            return (new operand<int16_t>(static_cast<int16_t>(tmp), Int16));
         } 
     }
     catch(FactoryException &e)
@@ -112,8 +110,7 @@ IOperand const * Factory::createInt32( std::string const & value ) const
             throw FactoryException("Bad value");
         else
         {
-            auto const * myInt32 = new operand<int32_t>(static_cast<int32_t>(tmp), Int32);
-            return (myInt32);
+            return (new operand<int32_t>(static_cast<int32_t>(tmp), Int32));
         } 
     }
     catch(FactoryException &e)
@@ -139,8 +136,7 @@ IOperand const * Factory::createFloat( std::string const & value ) const
             throw FactoryException("Bad value");
         else
         {
-            auto const * myFloat = new operand<float>(static_cast<float>(tmp), Float);
-            return (myFloat);
+            return (new operand<float>(static_cast<float>(tmp), Float));
         } 
     }
     catch(FactoryException &e)
@@ -167,8 +163,7 @@ IOperand const * Factory::createDouble( std::string const & value ) const
             throw FactoryException("Bad value");
         else
         {
-            auto const * myDouble = new operand<double>(static_cast<double>(tmp), Double);
-            return (myDouble);
+            return ( new operand<double>(static_cast<double>(tmp), Double));
         } 
     }
     catch(FactoryException &e)

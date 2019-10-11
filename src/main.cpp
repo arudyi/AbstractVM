@@ -1,6 +1,7 @@
 #include "../headers/AbstractVM.h"
+#include <istream>
 
-int main(int ac, char**av)
+int check_leaks(int ac, char**av)
 {
     Executer executer;
     if (ac != 1)
@@ -29,12 +30,37 @@ int main(int ac, char**av)
     {
         try
         {
-            executer.parsProgramm(std::cin, false);
+            std::string buf;
+            std::stringstream stream;
+            while (std::getline(std::cin, buf, '\n'))
+            {
+                if (!std::cin.good())
+                    throw Executer::ExecuterException("Error EOF");
+                stream << buf << '\n';
+                if (buf.find(";;") != std::string::npos)
+                {
+                    stream << EOF;
+                    break ;
+                }
+            }
+            executer.parsProgramm(stream, false);
         }
         catch(Executer::ExecuterException &error)
         {
             std::cout << error.GetMessage() << std::endl;
         }
     }
+    //system("leaks avm");
+    return (0);
+}
+
+int * k()
+{
+    return new int(42);
+}
+
+int main(int ac, char**av)
+{
+    check_leaks(ac, av);
     return (0);
 }

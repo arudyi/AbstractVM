@@ -4,7 +4,7 @@ SRC_DIR = ./src/
 OBJ_DIR = ./obj/
 SRC = main.cpp Factory.cpp Executer.cpp
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:.cpp=.o))
-CC_FLAGS = -Wall -Werror -Wextra
+CC_FLAGS = #-Wall -Werror -Wextra -std=c++11
 CC := clang++
 
 all: $(NAME)

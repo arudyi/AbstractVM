@@ -1,6 +1,7 @@
 #ifndef OPERAND_H
 #define OPERAND_H
 #include <exception>
+#include <iostream>
 #include <sstream>
 #include "eOperandType.h"
 #include "Factory.h"
