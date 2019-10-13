@@ -319,8 +319,8 @@ void Executer::mod()
     it++;
     const IOperand *y = it->get();
     if (y->toString() == "0")
-        throw ExecuterException("when div, divisior is 0");
-    std::shared_ptr<const IOperand> ptr(*x / *y);
+        throw ExecuterException("when mod, divisior is 0");
+    std::shared_ptr<const IOperand> ptr(*x % *y);
     _Array.pop_back();
     _Array.pop_back();
     _Array.push_back(ptr);
