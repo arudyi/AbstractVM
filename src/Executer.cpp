@@ -81,19 +81,19 @@ short Executer::parseInstruction(std::string & buf, std::string *Instruction)
         else if (buf == "pop")
             pop();
         else if (buf == "dump")
-            dump(_Array);
+            dump();
         else if (buf == "add")
-            add(_Array);
+            add();
         else if (buf == "sub")
-            sub(_Array);
+            sub();
         else if (buf == "mul")
-            mul(_Array);
+            mul();
         else if (buf == "div")
-            div(_Array);
+            div();
         else if (buf == "print")
             print();
         else if (buf == "mod")
-            mod(_Array);
+            mod();
         return 0;
     }
     else
@@ -208,32 +208,32 @@ void Executer::push(const std::string &instruction, std::string & value)
 {
     Factory factory;
 
-    if (_Array.size() > 1000)
-        throw Executer::ExecuterException("Size of stack is too big");
+    if (_Array.size() >= _Array.max_size())
+        throw Executer::ExecuterException("Size of conteiner is too big");
     if (instruction == "int8")
     {
         std::shared_ptr<const IOperand> ptr(factory.createOperand(Int8, value));
-        _Array.push(ptr);
+        _Array.push_back(ptr);
     }
     else if (instruction == "int16")
     {
         std::shared_ptr<const IOperand> ptr(factory.createOperand(Int16, value));
-        _Array.push(ptr);
+        _Array.push_back(ptr);
     }
     else if (instruction == "int32")
     { 
         std::shared_ptr<const IOperand> ptr(factory.createOperand(Int32, value));
-        _Array.push(ptr);
+        _Array.push_back(ptr);
     }
     else if (instruction == "float")
     {
         std::shared_ptr<const IOperand> ptr(factory.createOperand(Float, value));
-        _Array.push(ptr);
+        _Array.push_back(ptr);
     }
     else if (instruction == "double")
     {
         std::shared_ptr<const IOperand> ptr(factory.createOperand(Double, value));
-        _Array.push(ptr);
+        _Array.push_back(ptr);
     }
 }   
 
@@ -241,104 +241,106 @@ void Executer::pop()
 {
     if (_Array.empty())
         throw ExecuterException("Error with pop, stack is empty");
-    _Array.pop();
+    _Array.pop_back();
 }
 
-void Executer::dump(std::stack<std::shared_ptr<const IOperand>> src)
+void Executer::dump()
 {
-    auto run = (src.size());
-    while (run--)
+    for (auto it = _Array.rbegin(); it != _Array.rend(); it++)
     {
-        std::cout << src.top().get()->toString() << std::endl;
-        src.pop();
+        std::cout << it->get()->toString() << std::endl;
     }
 }
 
-void Executer::add(std::stack<std::shared_ptr<const IOperand> > src)
+void Executer::add()
 {
     if (_Array.size() < 2)
         throw ExecuterException("when add, size is < 2");
-    
-    const IOperand *x = src.top().get();
-    src.pop();
-    const IOperand *y = src.top().get();
-    src.pop();
+    auto it = _Array.rbegin();
+    const IOperand *x = it->get();
+    it++;
+    const IOperand *y = it->get();
     std::shared_ptr<const IOperand> ptr(*x + *y);
-    _Array.pop();
-    _Array.pop();
-    _Array.push(ptr);
+    _Array.pop_back();
+    _Array.pop_back();
+    _Array.push_back(ptr);
 }
 
-void Executer::sub(std::stack<std::shared_ptr<const IOperand> > src)
+void Executer::sub()
 {
     if (_Array.size() < 2)
         throw ExecuterException("when sub, size is < 2");
-    const IOperand *x = src.top().get();
-    src.pop();
-    const IOperand *y = src.top().get();
-    src.pop();
+    auto it = _Array.rbegin();
+    const IOperand *x = it->get();
+    it++;
+    const IOperand *y = it->get();
     std::shared_ptr<const IOperand> ptr(*x - *y);
-    _Array.pop();
-    _Array.pop();
-    _Array.push(ptr);
+    _Array.pop_back();
+    _Array.pop_back();
+    _Array.push_back(ptr);
 }
 
-void Executer::mul(std::stack<std::shared_ptr<const IOperand> > src)
+void Executer::mul()
 {
     if (_Array.size() < 2)
         throw ExecuterException("when mul, size is < 2");
-    const IOperand *x = src.top().get();
-    src.pop();
-    const IOperand *y = src.top().get();
-    src.pop();
+    auto it = _Array.rbegin();
+    const IOperand *x = it->get();
+    it++;
+    const IOperand *y = it->get();
     std::shared_ptr<const IOperand> ptr(*x * *y);
-    _Array.pop();
-    _Array.pop();
-    _Array.push(ptr);
+    _Array.pop_back();
+    _Array.pop_back();
+    _Array.push_back(ptr);
 }
 
-void Executer::div(std::stack<std::shared_ptr<const IOperand> > src)
+void Executer::div()
 {
     if (_Array.size() < 2)
         throw ExecuterException("when div, size is < 2");
-    const IOperand *x = src.top().get();
-    src.pop();
-    const IOperand *y = src.top().get();
-    src.pop();
+    auto it = _Array.rbegin();
+    const IOperand *x = it->get();
+    it++;
+    const IOperand *y = it->get();
     if (y->toString() == "0")
         throw ExecuterException("when div, divisior is 0");
     std::shared_ptr<const IOperand> ptr(*x / *y);
-    _Array.pop();
-    _Array.pop();
-    _Array.push(ptr);
+    _Array.pop_back();
+    _Array.pop_back();
+    _Array.push_back(ptr);
 }
 
-void Executer::mod(std::stack<std::shared_ptr<const IOperand> > src)
+void Executer::mod()
 {
     if (_Array.size() < 2)
         throw ExecuterException("when mod, size is < 2");
-    const IOperand * x = src.top().get();
-    src.pop(); 
-    const IOperand * y = src.top().get();
-    src.pop();
+    auto it = _Array.rbegin();
+    const IOperand *x = it->get();
+    it++;
+    const IOperand *y = it->get();
     if (y->toString() == "0")
-        throw ExecuterException("when mod, divisior is 0");
-    std::shared_ptr<const IOperand> ptr(*x % *y);
-    _Array.pop();
-    _Array.pop();
-    _Array.push(ptr);
+        throw ExecuterException("when div, divisior is 0");
+    std::shared_ptr<const IOperand> ptr(*x / *y);
+    _Array.pop_back();
+    _Array.pop_back();
+    _Array.push_back(ptr);
 }
 
 void Executer::print()
 {
-    if ( _Array.top().get()->getPrecision() != 0 )
+    if (_Array.empty())
+        throw ExecuterException("Error print, _Array is empty");
+    if ( _Array.back().get()->getPrecision() != 0 )
         throw ExecuterException("Error print, top value is not int8");
-    std::cout << _Array.top().get()->toString() << std::endl;
+    std::cout << static_cast<char>(std::stoi( _Array.back().get()->toString() )) << std::endl;
 }
 
 void Executer::assert(std::string type, std::string value)
 {
     int enumtype;
+    
+    if (_Array.empty())
+        throw ExecuterException("Error! Assert is empty");
     if (type == "int8")
         enumtype = 0;
     else if (type == "int16")
@@ -349,6 +351,6 @@ void Executer::assert(std::string type, std::string value)
         enumtype = 3;
     else if (type == "double")
         enumtype = 4;
-    if (!(value == _Array.top().get()->toString() && enumtype == _Array.top().get()->getPrecision()))
-        throw ExecuterException("Error with assert");
+    if (!(value == _Array.back().get()->toString() && enumtype == _Array.back().get()->getPrecision()))
+        throw ExecuterException("Error! top value is another");
 }

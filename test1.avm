@@ -4,6 +4,6 @@
 
 push float(34.5f)
 push double(7.123456789)
-push double(3.0)
+push double(-3.0)
 dump
 exit
