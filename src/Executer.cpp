@@ -20,7 +20,7 @@ Executer::Executer(const Executer &rhs)
     *this = rhs;
 }
 
-Executer & Executer::operator = ( const Executer &rhs )
+Executer & Executer::operator =( const Executer &rhs )
 {
     if (this == &rhs)
         return *this;
@@ -112,7 +112,7 @@ short Executer::parseInstruction(std::string & buf, std::string *Instruction)
 
         for(auto it = value.begin(); it != value.end(); it++)
         { 
-            if ( *it != '.' && *it != 'f' && *it != '1' && *it != '2' && *it != '3' && *it != '4' && *it != '5' && *it != '6' && *it != '7' && *it != '8' && *it != '9' && *it != '0')
+            if ( *it != '-' && *it != '.' && *it != 'f' && *it != '1' && *it != '2' && *it != '3' && *it != '4' && *it != '5' && *it != '6' && *it != '7' && *it != '8' && *it != '9' && *it != '0')
                 return 2;
         }
         if (instruction == "int8" || instruction == "int16" || instruction == "int32" || instruction == "float" || instruction == "double")
@@ -208,6 +208,8 @@ void Executer::push(const std::string &instruction, std::string & value)
 {
     Factory factory;
 
+    if (_Array.size() > 1000)
+        throw Executer::ExecuterException("Size of stack is too big");
     if (instruction == "int8")
     {
         std::shared_ptr<const IOperand> ptr(factory.createOperand(Int8, value));
@@ -303,10 +305,8 @@ void Executer::div(std::stack<std::shared_ptr<const IOperand> > src)
     src.pop();
     const IOperand *y = src.top().get();
     src.pop();
-    int precision = y->getPrecision();
-    if (precision == 0|| precision == 1 || precision == 2)
-        if (y->toString() == "0")
-            throw ExecuterException("when div, divisior is 0");
+    if (y->toString() == "0")
+        throw ExecuterException("when div, divisior is 0");
     std::shared_ptr<const IOperand> ptr(*x / *y);
     _Array.pop();
     _Array.pop();
@@ -321,10 +321,8 @@ void Executer::mod(std::stack<std::shared_ptr<const IOperand> > src)
     src.pop(); 
     const IOperand * y = src.top().get();
     src.pop();
-    int precision = y->getPrecision();
-    if (precision == 0|| precision == 1 || precision == 2)
-        if (y->toString() == "0")
-            throw ExecuterException("when mod, divisior is 0");
+    if (y->toString() == "0")
+        throw ExecuterException("when mod, divisior is 0");
     std::shared_ptr<const IOperand> ptr(*x % *y);
     _Array.pop();
     _Array.pop();

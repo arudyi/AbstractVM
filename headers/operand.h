@@ -49,16 +49,18 @@ operand<T>::operand()
 
 };
 
-
 template <typename T>
 operand<T>::operand(T Itsvalue, eOperandType Ittype):
 _Value(Itsvalue),
 _Type(Ittype)
 {
     std::stringstream strStream;
-    strStream << _Value;
+    
+    if (_Type == Int8 || _Type == Int16)
+        strStream << static_cast<int>(_Value);
+    else
+        strStream << _Value;
     strStream >> _StrValue;
-
 };
 
 template <typename T>

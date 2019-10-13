@@ -20,6 +20,10 @@ int check_leaks(int ac, char**av)
                 {
                     std::cout << e.GetMessage() << std::endl;
                 }
+                catch(...)
+                {
+                    std::cout << "Something bad happened" << std::endl;
+                }
                 fs.close();
             }
             else
@@ -49,14 +53,13 @@ int check_leaks(int ac, char**av)
         {
             std::cout << error.GetMessage() << std::endl;
         }
+        catch(...)
+        {
+            std::cout << "Something bad happened" << std::endl;
+        }
     }
     //system("leaks avm");
     return (0);
-}
-
-int * k()
-{
-    return new int(42);
 }
 
 int main(int ac, char**av)

@@ -51,9 +51,7 @@ IOperand const * Factory::createInt8( std::string const & value ) const
         if (fractPart != 0 || intPart > INT8_MAX || intPart < INT8_MIN)
             throw FactoryException("Bad value");
         else
-        {
             return (new operand<int8_t>(static_cast<int8_t>(tmp), Int8));
-        } 
     }
     catch(FactoryException &e)
     {
@@ -64,6 +62,10 @@ IOperand const * Factory::createInt8( std::string const & value ) const
         throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
+    {
+        throw Executer::ExecuterException(e.what());
+    }
+    catch(std::bad_alloc &e)
     {
         throw Executer::ExecuterException(e.what());
     }
@@ -80,9 +82,7 @@ IOperand const * Factory::createInt16( std::string const & value ) const
         if (fractPart != 0 || intPart > INT16_MAX || intPart < INT16_MIN)
             throw FactoryException("Bad value");
         else
-        {
             return (new operand<int16_t>(static_cast<int16_t>(tmp), Int16));
-        } 
     }
     catch(FactoryException &e)
     {
@@ -93,6 +93,10 @@ IOperand const * Factory::createInt16( std::string const & value ) const
         throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
+    {
+        throw Executer::ExecuterException(e.what());
+    }
+    catch(std::bad_alloc &e)
     {
         throw Executer::ExecuterException(e.what());
     }
@@ -108,10 +112,8 @@ IOperand const * Factory::createInt32( std::string const & value ) const
         fractPart = modf(tmp, &intPart);
         if (fractPart != 0 || intPart > INT32_MAX || intPart < INT32_MIN)
             throw FactoryException("Bad value");
-        else
-        {
-            return (new operand<int32_t>(static_cast<int32_t>(tmp), Int32));
-        } 
+            
+        return (new operand<int32_t>(static_cast<int32_t>(tmp), Int32));
     }
     catch(FactoryException &e)
     {
@@ -122,6 +124,10 @@ IOperand const * Factory::createInt32( std::string const & value ) const
         throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
+    {
+        throw Executer::ExecuterException(e.what());
+    }
+    catch(std::bad_alloc &e)
     {
         throw Executer::ExecuterException(e.what());
     }
@@ -131,13 +137,8 @@ IOperand const * Factory::createFloat( std::string const & value ) const
 {
     try
     {
-        auto tmp = std::stold(value);
-        if (tmp > FLT_MAX || tmp < FLT_MIN)
-            throw FactoryException("Bad value");
-        else
-        {
-            return (new operand<float>(static_cast<float>(tmp), Float));
-        } 
+        auto tmp = std::stof(value);
+        return (new operand<float>(static_cast<float>(tmp), Float));
     }
     catch(FactoryException &e)
     {
@@ -148,6 +149,10 @@ IOperand const * Factory::createFloat( std::string const & value ) const
         throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
+    {
+        throw Executer::ExecuterException(e.what());
+    }
+    catch(std::bad_alloc &e)
     {
         throw Executer::ExecuterException(e.what());
     }
@@ -157,14 +162,8 @@ IOperand const * Factory::createDouble( std::string const & value ) const
 {
     try
     {
-        auto tmp = std::stold(value);
-
-        if (tmp > DBL_MAX || tmp < DBL_MIN)
-            throw FactoryException("Bad value");
-        else
-        {
-            return ( new operand<double>(static_cast<double>(tmp), Double));
-        } 
+        auto tmp = std::stod(value);
+        return new operand<double>(static_cast<double>(tmp), Double);
     }
     catch(FactoryException &e)
     {
@@ -175,6 +174,10 @@ IOperand const * Factory::createDouble( std::string const & value ) const
         throw Executer::ExecuterException(e.what());
     }
     catch(std::invalid_argument &e)
+    {
+        throw Executer::ExecuterException(e.what());
+    }
+    catch(std::bad_alloc &e)
     {
         throw Executer::ExecuterException(e.what());
     }
