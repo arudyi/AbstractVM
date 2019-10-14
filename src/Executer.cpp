@@ -336,21 +336,53 @@ void Executer::print()
 }
 
 void Executer::assert(std::string type, std::string value)
-{
-    int enumtype;
-    
+{    
     if (_Array.empty())
         throw ExecuterException("Error! Assert is empty");
-    if (type == "int8")
-        enumtype = 0;
-    else if (type == "int16")
-        enumtype = 1;
-    else if (type == "int32")
-        enumtype = 2;
-    else if (type == "float")
-        enumtype = 3;
-    else if (type == "double")
-        enumtype = 4;
-    if (!(value == _Array.back().get()->toString() && enumtype == _Array.back().get()->getPrecision()))
-        throw ExecuterException("Error! top value is another");
+
+    try
+    {
+        std::stringstream stream;
+        std::string str;
+        if (type == "int8")
+        {
+            if (Int8 != _Array.back().get()->getPrecision() || std::stoi(value) != std::stoi(_Array.back().get()->toString()))
+                throw ExecuterException("Error! top value is another");
+        }
+        else if (type == "int16")
+        {
+            if (Int16 != _Array.back().get()->getPrecision() || std::stoi(value) != std::stoi(_Array.back().get()->toString()))
+                throw ExecuterException("Error! top value is another");
+        }
+        else if (type == "int32")
+        {
+            if (Int32 != _Array.back().get()->getPrecision() || std::stoi(value) != std::stoi(_Array.back().get()->toString()))
+                throw ExecuterException("Error! top value is another");
+        }
+        else if (type == "float")
+        {
+            auto tmp = std::stof(value);
+            stream << tmp;
+            stream >> str;
+
+            if (Float != _Array.back().get()->getPrecision() || std::stof(str) != std::stof(_Array.back().get()->toString()))
+                throw ExecuterException("Error! top value is another");
+        }
+        else if (type == "double")
+        {
+            auto tmp = std::stod(value);
+            stream << tmp;
+            stream >> str;
+            if (Double != _Array.back().get()->getPrecision() || std::stod(str) != std::stod(_Array.back().get()->toString()))
+                throw ExecuterException("Error! top value is another");
+        }
+    }
+    catch(std::out_of_range &e)
+    {
+        throw Executer::ExecuterException(e.what());
+    }
+    catch(std::invalid_argument &e)
+    {
+        throw Executer::ExecuterException(e.what());
+    }
 }

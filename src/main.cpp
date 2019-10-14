@@ -15,6 +15,7 @@ int check_leaks(int ac, char**av)
                 try
                 {
                     executer.parsProgramm(fs, true);
+                    fs.close();
                 }
                 catch(Executer::ExecuterException &e)
                 {
@@ -24,7 +25,6 @@ int check_leaks(int ac, char**av)
                 {
                     std::cout << "Something bad happened" << std::endl;
                 }
-                fs.close();
             }
             else
                 std::cout << "cannot open file " << av[ac] << std::endl;
@@ -58,7 +58,6 @@ int check_leaks(int ac, char**av)
             std::cout << "Something bad happened" << std::endl;
         }
     }
-    //system("leaks avm");
     return (0);
 }
 

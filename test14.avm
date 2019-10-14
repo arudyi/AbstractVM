@@ -1,0 +1,4 @@
+push double(-6.5)
+;;
+dump
+;;

@@ -3,6 +3,7 @@
 #include <exception>
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include "eOperandType.h"
 #include "Factory.h"
 #include "Executer.h"
@@ -56,11 +57,26 @@ _Type(Ittype)
 {
     std::stringstream strStream;
     
-    if (_Type == Int8 || _Type == Int16)
+    if (_Type == Int8)
+    {
         strStream << static_cast<int>(_Value);
+        strStream >> _StrValue;
+    }
+    else if (_Type == Float)
+    {
+        strStream << std::setprecision(8) << _Value;
+        strStream >> std::setprecision(8) >> _StrValue;
+    }
+    else if (_Type == Double)
+    {
+        strStream << std::setprecision(8) << _Value;
+        strStream >> std::setprecision(8) >> _StrValue;
+    }
     else
+    {
         strStream << _Value;
-    strStream >> _StrValue;
+        strStream >> _StrValue;
+    }
 };
 
 template <typename T>

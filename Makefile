@@ -27,5 +27,3 @@ fclean: clean
 	rm -rf $(NAME)
 
 re: fclean all
-
-vpath %.c $(SRC_DIR)
